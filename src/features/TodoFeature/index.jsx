@@ -4,11 +4,17 @@ import { useDispatch, useSelector } from "react-redux";
 import SelectForm from "./components/SelectForm";
 import TodoForm from "./components/TodoForm";
 import TodoList from "./components/TodoList";
-import { addTodo, filteredTodoList, getData } from "./todoSlice";
+import {
+    addTodo,
+    filteredTodoList,
+    getData,
+    searchTodoList,
+} from "./todoSlice";
 import Skeleton from "@material-ui/lab/Skeleton";
 import CircularProgress from "@material-ui/core/CircularProgress";
 import { useHistory, useLocation, useRouteMatch } from "react-router";
 import queryString from "query-string";
+import SearchForm from "./components/SearchForm";
 
 TodoFeature.propTypes = {};
 
@@ -56,10 +62,21 @@ function TodoFeature(props) {
     const todoList = useSelector((state) => {
         const all = state.todo.data;
         const filterList = state.todo.filter;
+        const searchItem = state.todo.searchTerm;
+
         const urlParams = queryString.parse(location.search).status; // type string, is value when selectForm pass up (handleFiltersChange)
 
+        // filter item by search
+        const searched = all.filter((item) => {
+            return item.title.includes(searchItem);
+        });
+
         if (urlParams === "all" || filterList === "all") {
-            return all;
+            if (searched.length > 0) {
+                return searched;
+            } else {
+                return [];
+            }
         } else {
             return all.filter(
                 (item) => urlParams === "all" || urlParams === item.status
@@ -91,6 +108,11 @@ function TodoFeature(props) {
         dispatch(addTodo(formValues));
     };
 
+    const handleSearchSubmit = (value) => {
+        console.log("FORM SUBMIT: ", value);
+        dispatch(searchTodoList(value));
+    };
+
     return (
         <>
             {loading ? (
@@ -118,6 +140,10 @@ function TodoFeature(props) {
             ) : (
                 <Box className={classes.root}>
                     <h1>Todo List</h1>
+                    <SearchForm
+                        onSubmit={handleSearchSubmit}
+                        isLoggedIn={isLoggedIn}
+                    />
                     <Box className={classes.form}>
                         <TodoForm
                             onSubmit={handleSubmit}

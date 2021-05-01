@@ -1,4 +1,4 @@
-import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+import { createAsyncThunk, createSlice, current } from "@reduxjs/toolkit";
 import todoApi from "../../api/todoApi";
 
 export const getData = createAsyncThunk("todo/getData", async () => {
@@ -15,6 +15,7 @@ const todoSlice = createSlice({
         data: [],
         filter: "all",
         status: null,
+        searchTerm: "",
     },
     reducers: {
         addTodo(state, action) {
@@ -81,6 +82,9 @@ const todoSlice = createSlice({
             // filter todo list
             state.filter = action.payload;
         },
+        searchTodoList(state, action) {
+            state.searchTerm = action.payload;
+        },
     },
     extraReducers: {
         [getData.pending]: (state) => {
@@ -103,5 +107,6 @@ export const {
     removeTodo,
     completedTodo,
     filteredTodoList,
+    searchTodoList,
 } = actions;
 export default reducer;
