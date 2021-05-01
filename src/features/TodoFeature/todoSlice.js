@@ -1,4 +1,4 @@
-import { createAsyncThunk, createSlice, current } from "@reduxjs/toolkit";
+import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import todoApi from "../../api/todoApi";
 
 export const getData = createAsyncThunk("todo/getData", async () => {
