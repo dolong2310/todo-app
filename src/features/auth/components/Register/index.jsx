@@ -24,6 +24,7 @@ function Register({ closeDialog }) {
             const user = unwrapResult(resultAction);
 
             // do something when register successfully
+            window.location.reload();
             console.log("New user", user);
 
             // close dialog

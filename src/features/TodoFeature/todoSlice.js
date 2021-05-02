@@ -6,7 +6,7 @@ export const getData = createAsyncThunk("todo/getData", async () => {
     const data = await todoApi.getAll({
         userId: JSON.parse(localStorage.getItem("user")).id,
     });
-    return data;
+    return data || [];
 });
 
 const todoSlice = createSlice({
